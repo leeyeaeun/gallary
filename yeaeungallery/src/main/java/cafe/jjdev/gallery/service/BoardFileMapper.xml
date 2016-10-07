@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafe.jjdev.gallery.service.BoardFileMapper">
+	
+	<update id="updateBoardFile" parameterType="cafe.jjdev.gallery.service.BoardFile">
+		UPDATE board_file
+		SET
+			board_file_name=#{boardFileName},
+			board_File_ext=#{boardFileExt},
+			board_file_size=#{boardFileSize} ,
+			board_file_type =#{boardFileType} 
+		WHERE 
+			board_article_no =#{boardArticleNo};
+	</update> 
+	
+	<delete id="deleteBoardFileByFK" parameterType="int">
+		DELETE FROM board_File 
+		WHERE board_article_no = #{boardArticleNo}
+	
+	</delete>
+	<select id="selectBoardFileByFK" parameterType="int" resultType="cafe.jjdev.gallery.service.BoardFile">
+		select
+			board_article_no as boardArticleNo,
+			board_file_name as boardFileName,
+			board_file_ext as boardFileExt,
+			board_file_size as boardFileSize,
+			board_file_type as boardFileType
+		from
+			board_file
+		where 
+			board_article_no = #{boardArticleNo}
+			
+	
+	</select>
+	<insert id="insertBoardFile" parameterType="cafe.jjdev.gallery.service.BoardFile">
+		insert into Board_file (
+			board_article_no,
+			board_file_name,
+			board_file_ext,
+			board_file_size,
+			board_file_type
+		)values(
+			#{boardArticleNo},
+			#{boardFileName},
+			#{boardFileExt},
+			#{boardFileSize},
+			#{boardFileType}
+		)
+	</insert>
+</mapper>

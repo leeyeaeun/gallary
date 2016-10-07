@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafe.jjdev.gallery.service.BoardArticleMapper">
+	<!-- parameterType:입력값 -->
+
+	
+	 <update id="updateBoardArticle" parameterType="cafe.jjdev.gallery.service.BoardArticle">
+		UPDATE board_article
+		SET
+			board_article_title=#{boardArticleTitle},
+			board_article_content=#{boardArticleContent}
+		WHERE 
+			board_article_no =#{boardArticleNo}
+	
+	</update>
+
+	
+	<delete id="deleteBoardArticle" parameterType="cafe.jjdev.gallery.service.BoardArticle">
+		DELETE FROM board_article 
+		WHERE board_article_no = #{boardArticleNo}
+	</delete>
+	<select id="selectTotalCount" resultType="Integer"> SELECT COUNT(*) FROM
+		board_article </select>
+
+	
+	<select id="selectBoardArticleContentByKey" parameterType="int"
+		resultType="cafe.jjdev.gallery.service.BoardArticle">
+		select
+			board_article_no as boardArticleNo,
+			board_article_title as boardArticleTitle,
+			board_article_content as boardArticleContent
+		from
+			board_article
+		where board_article_no = #{boardArticleNo}
+	</select>
+	
+	
+	
+	<!-- #{boardArticleNo}와같이값이 하나만 넘어올경우에는 이름이 일치하지않아도된다 -->
+
+	<select id="selectBoardArticleList" parameterType="java.util.Map"
+		resultType="cafe.jjdev.gallery.service.BoardArticle">
+		select
+			board_article_no as boardArticleNo,
+			board_article_title as boardArticleTitle
+		from
+			board_article
+	
+		<where>
+			<!-- where절이 word의 유무에따라 생기는 동적쿼리 -->
+			<if test="word != null"> board_article_title like CONCAT('%',#{word},'%') </if>
+		</where>
+		ORDER BY board_article_no ASC LIMIT #{pageHelper.startRow}, #{pageHelper.linePerPage} 
+	</select>
+
+
+	<insert id="insertBoardArticle" parameterType="cafe.jjdev.gallery.service.BoardArticle">
+
+		<selectKey resultType="int" keyProperty="boardArticleNo"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+
+			insert into board_article(
+				board_article_title,
+				board_article_content
+			)values(
+				#{boardArticleTitle},
+				#{boardArticleContent}
+			)
+
+	</insert>
+
+
+
+</mapper>
